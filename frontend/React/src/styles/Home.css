@@ -1,0 +1,25 @@
+.home-page {
+  min-height: 100vh;
+
+  background: linear-gradient(
+    135deg,
+    #140a36,
+    #2d1b69
+  );
+}
+
+.card.home-card {
+  background: #4338ca !important;
+  border-radius: 25px;
+  padding: 30px;
+}
+
+.list-group-item {
+  border: none !important;
+  padding: 15px 20px;
+}
+
+.list-group-item:hover {
+  transform: translateY(-2px);
+  transition: 0.3s;
+}
