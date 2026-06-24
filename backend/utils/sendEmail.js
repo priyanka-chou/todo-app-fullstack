@@ -1,7 +1,5 @@
 const nodemailer = require("nodemailer");
 
-
-
 console.log("USER:", process.env.BREVO_USER);
 console.log("PASS EXISTS:", !!process.env.BREVO_PASS);
 console.log("SENDER:", process.env.BREVO_SENDER);
@@ -15,9 +13,6 @@ const transporter = nodemailer.createTransport({
     user: process.env.BREVO_USER,
     pass: process.env.BREVO_PASS,
   },
-  tls: {
-    rejectUnauthorized: false,
-  },
 });
 
 transporter.verify((err) => {
@@ -29,10 +24,10 @@ transporter.verify((err) => {
 });
 
 const sendEmail = async (email, otp) => {
-
   console.log("sendEmail called");
   console.log("Email:", email);
   console.log("OTP:", otp);
+
   try {
     const info = await transporter.sendMail({
       from: process.env.BREVO_SENDER,
@@ -45,9 +40,11 @@ const sendEmail = async (email, otp) => {
     });
 
     console.log("Mail sent:", info.messageId);
+    return true;
 
   } catch (error) {
-    console.log("Mail Error:", error.message);
+    console.log("Mail Error:", error);
+    throw error;
   }
 };
 
