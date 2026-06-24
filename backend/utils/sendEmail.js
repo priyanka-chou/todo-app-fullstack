@@ -1,34 +1,48 @@
-const nodemailer =require("nodemailer");
+const nodemailer = require("nodemailer");
 
 
-console.log("EMAIL:", process.env.EMAIL_USER);
-console.log("PASS LENGTH:", process.env.EMAIL_PASS?.length);
+console.log("BREVO USER:", process.env.BREVO_USER);
+console.log("BREVO PASS LENGTH:", process.env.BREVO_PASS?.length);
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
+  family: 4,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: process.env.BREVO_USER,
+    pass: process.env.BREVO_PASS,
   },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
 });
 
+transporter.verify((err) => {
+  if (err) {
+    console.log("SMTP Error:", err.message);
+  } else {
+    console.log("SMTP Ready");
+  }
+});
 
-
-
-
-const sendEmail =async (email,otp)=>{
-
-    await transporter.sendMail({
-        from : process.env.EMAIL_USER,
-        to : email,
-        subject :"Todo App OTP Verification",
-        html :`
-
-         <h2>Your OTP is: ${otp}</h2>
-      <p>Valid for 5 minutes.</p>
-        `
+const sendEmail = async (email, otp) => {
+  try {
+    const info = await transporter.sendMail({
+      from: process.env.BREVO_SENDER,
+      to: email,
+      subject: "Todo App OTP Verification",
+      html: `
+        <h2>Your OTP is: ${otp}</h2>
+        <p>Valid for 5 minutes.</p>
+      `,
     });
-};
 
+    console.log("Mail sent:", info.messageId);
+
+  } catch (error) {
+    console.log("Mail Error:", error.message);
+  }
+};
 
 module.exports = sendEmail;
