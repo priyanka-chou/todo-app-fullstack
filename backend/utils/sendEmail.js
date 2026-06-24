@@ -8,15 +8,16 @@ console.log("SENDER:", process.env.BREVO_SENDER);
 
 const transporter = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
-  port: 465,
-  secure: true,
+  port: 587,
+  secure: false,
+  requireTLS: true,
   auth: {
     user: process.env.BREVO_USER,
-    pass: process.env.BREVO_PASS
+    pass: process.env.BREVO_PASS,
   },
-  connectionTimeout: 60000,
-  greetingTimeout: 60000,
-  socketTimeout: 60000,
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
 transporter.verify((err) => {
@@ -28,6 +29,10 @@ transporter.verify((err) => {
 });
 
 const sendEmail = async (email, otp) => {
+
+  console.log("sendEmail called");
+  console.log("Email:", email);
+  console.log("OTP:", otp);
   try {
     const info = await transporter.sendMail({
       from: process.env.BREVO_SENDER,

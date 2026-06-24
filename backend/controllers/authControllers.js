@@ -151,6 +151,8 @@ const sendOtp = async (req, res) => {
     const { email } = req.body;
 
     console.log("EMAIL RECEIVED:", email);
+    console.log("sendOtp route hit");
+console.log("EMAIL RECEIVED:", email);
 
     try {
 
@@ -172,6 +174,10 @@ const sendOtp = async (req, res) => {
                 }
 
         const otp =Math.floor(100000 + Math.random() * 900000);
+        console.log("sendOtp route hit");
+console.log("EMAIL RECEIVED:", email);
+console.log("OTP:", otp);
+console.log("About to call sendEmail");
 
         db.query(
             "DELETE FROM otp_verifications WHERE email=?",
@@ -192,6 +198,10 @@ const sendOtp = async (req, res) => {
                         if (err) {
                             return res.status(500).json(err);
                         }
+                        console.log("sendOtp route hit");
+console.log("EMAIL RECEIVED:", email);
+console.log("OTP:", otp);
+console.log("About to call sendEmail");
 
                         await sendEmail(email, otp);
 
