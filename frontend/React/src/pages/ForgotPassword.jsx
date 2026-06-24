@@ -91,7 +91,7 @@ const ForgotPassword = () => {
                 onClick={handleSendOtp}
                 disabled={loading}
               >
-                {setLoading ? "Sending OTP...." : "Send OTP"}
+                {loading ? "Sending OTP...." : "Send OTP"}
               </button>
 
               <button
