@@ -1,26 +1,27 @@
 const nodemailer = require("nodemailer");
 
 
-console.log("BREVO USER:", process.env.BREVO_USER);
-console.log("BREVO PASS LENGTH:", process.env.BREVO_PASS?.length);
+
+console.log("USER:", process.env.BREVO_USER);
+console.log("PASS EXISTS:", !!process.env.BREVO_PASS);
+console.log("SENDER:", process.env.BREVO_SENDER);
 
 const transporter = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false,
-  family: 4,
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.BREVO_USER,
-    pass: process.env.BREVO_PASS,
+    pass: process.env.BREVO_PASS
   },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
+  connectionTimeout: 60000,
+  greetingTimeout: 60000,
+  socketTimeout: 60000,
 });
 
 transporter.verify((err) => {
   if (err) {
-    console.log("SMTP Error:", err.message);
+    console.log("SMTP Error:", err);
   } else {
     console.log("SMTP Ready");
   }
