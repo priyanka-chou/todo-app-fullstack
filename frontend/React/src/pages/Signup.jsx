@@ -17,7 +17,7 @@ const Signup = () => {
 
   const handleSignup = async () => {
 
-   
+   console.log("Signup button clicked");
     
     if (!name.trim() && !email.trim() && !password.trim()) {
       return toast.error(
@@ -52,6 +52,7 @@ const Signup = () => {
      
     try {
 
+      console.log("Calling signup API");
       const response = await api.post(
         "/signup",
         {
@@ -60,6 +61,10 @@ const Signup = () => {
           password
         }
       );
+
+      console.log("Signup response:", response.data);
+
+    console.log("Calling send-otp API");
 
       await api.post(
         "/send-otp",
@@ -74,6 +79,7 @@ const Signup = () => {
       });
 
     } catch (error) {
+      console.log("FULL ERROR:", error);
 
       toast.error(
         error.response?.data?.message ||
