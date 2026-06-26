@@ -1,49 +1,31 @@
-const nodemailer = require("nodemailer");
+const brevo = require("@getbrevo/brevo");
 
-// console.log("USER:", process.env.BREVO_USER);
-// console.log("PASS EXISTS:", !!process.env.BREVO_PASS);
-// console.log("SENDER:", process.env.BREVO_SENDER);
+const apiInstance = new brevo.TransactionalEmailsApi();
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-console.log("Using Gmail SMTP");
-
-transporter.verify((err) => {
-  if (err) {
-    console.log("SMTP Error:", err);
-  } else {
-    console.log("SMTP Ready");
-  }
-});
+apiInstance.setApiKey(
+  brevo.TransactionalEmailsApiApiKeys.apiKey,
+  process.env.BREVO_API_KEY
+);
 
 const sendEmail = async (email, otp) => {
-  console.log("sendEmail called");
-  console.log("Email:", email);
-  console.log("OTP:", otp);
+  const sendSmtpEmail = new brevo.SendSmtpEmail();
 
-  try {
-    const info = await transporter.sendMail({
-  from: process.env.EMAIL_USER,
-  to: email,
-  subject: "Todo App OTP Verification",
-  html: `
+  sendSmtpEmail.subject = "Todo App OTP Verification";
+  sendSmtpEmail.htmlContent = `
     <h2>Your OTP is: ${otp}</h2>
     <p>Valid for 5 minutes.</p>
-  `,
-});
+  `;
 
-    console.log("Mail sent:", info.messageId);
-    return true;
+  sendSmtpEmail.sender = {
+    name: "Todo App",
+    email: process.env.BREVO_SENDER,
+  };
 
-  } catch (error) {
-    console.log("Mail Error:", error);
-    throw error;
-  }
+  sendSmtpEmail.to = [{ email }];
+
+  await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+  console.log("Mail sent successfully");
 };
 
 module.exports = sendEmail;
