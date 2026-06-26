@@ -11,6 +11,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
+console.log("Using Gmail SMTP");
 
 transporter.verify((err) => {
   if (err) {
