@@ -1,31 +1,36 @@
-const brevo = require("@getbrevo/brevo");
+const SibApiV3Sdk = require("@getbrevo/brevo");
 
-const apiInstance = new brevo.TransactionalEmailsApi();
+console.log(brevo);
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
 apiInstance.setApiKey(
-  brevo.TransactionalEmailsApiApiKeys.apiKey,
+  SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey,
   process.env.BREVO_API_KEY
 );
 
 const sendEmail = async (email, otp) => {
-  const sendSmtpEmail = new brevo.SendSmtpEmail();
+  try {
+    const sendSmtpEmail = {
+      sender: {
+        name: "Todo App",
+        email: process.env.BREVO_SENDER,
+      },
+      to: [{ email }],
+      subject: "Todo App OTP Verification",
+      htmlContent: `
+        <h2>Your OTP is: ${otp}</h2>
+        <p>Valid for 5 minutes.</p>
+      `,
+    };
 
-  sendSmtpEmail.subject = "Todo App OTP Verification";
-  sendSmtpEmail.htmlContent = `
-    <h2>Your OTP is: ${otp}</h2>
-    <p>Valid for 5 minutes.</p>
-  `;
+    const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log("Mail sent:", data);
+    return true;
 
-  sendSmtpEmail.sender = {
-    name: "Todo App",
-    email: process.env.BREVO_SENDER,
-  };
-
-  sendSmtpEmail.to = [{ email }];
-
-  await apiInstance.sendTransacEmail(sendSmtpEmail);
-
-  console.log("Mail sent successfully");
+  } catch (error) {
+    console.log("Mail Error:", error);
+    throw error;
+  }
 };
 
 module.exports = sendEmail;
