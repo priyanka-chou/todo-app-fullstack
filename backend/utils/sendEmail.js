@@ -1,6 +1,6 @@
 const SibApiV3Sdk = require("@getbrevo/brevo");
 
-console.log(brevo);
+console.log(SibApiV3Sdk);
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
 apiInstance.setApiKey(
