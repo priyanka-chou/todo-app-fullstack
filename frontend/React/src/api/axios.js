@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "https://todo-backend-xxxx.onrender.com"
+    // baseURL: "https://todo-backend-xxxx.onrender.com"
+    baseURL: "todo-app-fullstack-production-ceda.up.railway.app"
     //  baseURL: "http://localhost:5000"
 });
 
